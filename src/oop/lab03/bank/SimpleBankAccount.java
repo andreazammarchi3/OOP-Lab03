@@ -1,65 +1,64 @@
 package oop.lab03.bank;
 
-public class SimpleBankAccount {
+import oop.lab03.bank.interfaces.BankAccount;
 
-	private int userID;
-    /*
-     * Aggiungere i seguenti campi:
-     * - double balance: ammontare del conto
-     * - int userID: id del possessore del conto (già dichiarato: si veda al riguardo il metodo checkUser dichiarato in fondo alla classe)
-     * - int nTransactions: numero delle operazioni effettuate
-     * - static double ATM_TRANSACTION_FEE = 1: costo delle operazioni via ATM
-     */
+public class SimpleBankAccount implements BankAccount {
 
-    /*
-     * Creare un costruttore pubblico che prenda in ingresso un intero (ossia l'id
-     * dell'utente) ed un double (ossia, l'ammontare iniziale del conto corrente).
-     */
+    private double balance;
+    private int nTransactions;
+    private final int usrID;
 
-    /*
-     * Si aggiungano selettori per: 
-     * - ottenere l'id utente del possessore del conto
-     * - ottenere il numero di transazioni effettuate
-     * - ottenere l'ammontare corrente del conto.
-     */
+    private static final double ATM_TRANSACTION_FEE = 1;
+    private static final double MANAGEMENT_FEE = 5;
+
+    public SimpleBankAccount(final int usrID, final double balance) {
+        this.usrID = usrID;
+        this.balance = balance;
+        this.nTransactions = 0;
+    }
+
+    private void transactionOp(final int usrID, final double amount) {
+        if (checkUser(usrID)) {
+            this.balance += amount;
+            this.incTransactions();
+        }
+    }
 
     public void deposit(final int usrID, final double amount) {
-        /*
-         * Incrementa il numero di transazioni e aggiunge amount al totale del
-         * conto Nota: il deposito va a buon fine solo se l'id utente
-         * corrisponde
-         */
+        this.transactionOp(usrID, amount);
     }
 
     public void withdraw(final int usrID, final double amount) {
-        /*
-         * Incrementa il numero di transazioni e rimuove amount al totale del
-         * conto. Note: - Il conto puo' andare in rosso (ammontare negativo) -
-         * Il prelievo va a buon fine solo se l'id utente corrisponde
-         */
+        this.transactionOp(usrID, -amount);
     }
 
     public void depositFromATM(final int usrID, final double amount) {
-        /*
-         * Incrementa il numero di transazioni e aggiunge amount al totale del
-         * conto detraendo le spese (costante ATM_TRANSACTION_FEE) relative
-         * all'uso dell'ATM (bancomat) Nota: il deposito va a buon fine solo se
-         * l'id utente corrisponde
-         */
+        this.deposit(usrID, amount - SimpleBankAccount.ATM_TRANSACTION_FEE);
     }
 
     public void withdrawFromATM(final int usrID, final double amount) {
-        /*
-         * Incrementa il numero di transazioni e rimuove amount + le spese
-         * (costante ATM_TRANSACTION_FEE) relative all'uso dell'ATM (bancomat)
-         * al totale del conto. Note: - Il conto puo' andare in rosso (ammontare
-         * negativo) - Il prelievo va a buon fine solo se l'id utente
-         * corrisponde
-         */
+        this.withdraw(usrID, amount + SimpleBankAccount.ATM_TRANSACTION_FEE);
     }
 
-    /* Utility method per controllare lo user */
+    private void incTransactions() {
+        this.nTransactions++;
+    }
+
+    public void chargeManagementFees(final int usrID) {
+        if (checkUser(usrID)) {
+            this.balance -= SimpleBankAccount.MANAGEMENT_FEE;
+        }
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public int getTransactionsCount() {
+        return this.nTransactions;
+    }
+
     private boolean checkUser(final int id) {
-        return this.userID == id;
+        return this.usrID == id;
     }
 }

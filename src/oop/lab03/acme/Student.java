@@ -9,7 +9,8 @@ public class Student implements User {
     private final int matriculationYear;
     private final String password;
 
-    public Student(final int id, final String name, final String surname, final String password, final int matriculationYear) {
+    public Student(final int id, final String name, final String surname, final String password,
+            final int matriculationYear) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -34,9 +35,7 @@ public class Student implements User {
     }
 
     public String toString() {
-        return "Student [name=" + this.name
-                + ", surname=" + this.surname
-                + ", id=" + this.id + ", matriculationYear="
+        return "Student [name=" + this.name + ", surname=" + this.surname + ", id=" + this.id + ", matriculationYear="
                 + this.matriculationYear + "]";
     }
 
